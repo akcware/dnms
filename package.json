@@ -2,8 +2,16 @@
   "name": "dnms",
   "version": "0.1.2",
   "bin": {
-    "dnms": "main.ts"
+    "dnms": "dist/main.js"
   },
+  "scripts": {
+    "build": "bun build main.ts --outdir=dist --minify --sourcemap=external --target=bun",
+    "prepublishOnly": "bun run build",
+    "publish:npm": "bun run build && npm publish"
+  },
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@types/bun": "latest"
   },
