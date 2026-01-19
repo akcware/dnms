@@ -1,6 +1,9 @@
 {
-  "name": "delete-node-modules",
-  "private": true,
+  "name": "dnms",
+  "version": "0.1.0",
+  "bin": {
+    "dnms": "main.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },

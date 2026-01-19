@@ -21,31 +21,43 @@ bun install
 
 ## 🚀 Usage
 
+### Run Without Install
+
+**With Bun:**
+```bash
+bunx dnms --scan
+```
+
+**With npm:**
+```bash
+npx dnms --scan
+```
+
 ### Basic Commands
 
 **Scan directories without deleting:**
 ```bash
-bun run main.ts --scan
+bunx dnms --scan
 ```
 
 **Scan a specific directory:**
 ```bash
-bun run main.ts --scan ~/projects
+bunx dnms --scan ~/projects
 ```
 
 **Dry run (see what would be deleted):**
 ```bash
-bun run main.ts --dry-run
+bunx dnms --dry-run
 ```
 
 **Delete with confirmation prompts:**
 ```bash
-bun run main.ts --confirm
+bunx dnms --confirm
 ```
 
 **Verbose output:**
 ```bash
-bun run main.ts --verbose --scan
+bunx dnms --verbose --scan
 ```
 
 ### Command-Line Options
@@ -62,17 +74,22 @@ bun run main.ts --verbose --scan
 
 **Find all node_modules in your projects directory:**
 ```bash
-bun run main.ts --scan ~/Documents/projects
+bunx dnms --scan ~/Documents/projects
+```
+
+**Find all node_modules using the CLI name:**
+```bash
+bunx dnms --scan ~/Documents/projects
 ```
 
 **Delete all node_modules with individual confirmation:**
 ```bash
-bun run main.ts --confirm ~/Documents/projects
+bunx dnms --confirm ~/Documents/projects
 ```
 
 **Preview deletion with detailed output:**
 ```bash
-bun run main.ts --dry-run --verbose .
+bunx dnms --dry-run --verbose .
 ```
 
 ## 🔒 Safety Features
