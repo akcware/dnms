@@ -139,37 +139,28 @@ function printHelp() {
 
 /**
  * Calculates the total size of a directory by recursively scanning all files
- * Uses Bun's Glob API for efficient file traversal
+ * Uses Bun shell with `du` command for fast size calculation
  * @param dir - The directory path to calculate size for
  * @returns Total size in bytes, or 0 if the directory cannot be accessed
  */
 async function getDirectorySize(dir: string): Promise<number> {
-  let total = 0;
-  
   try {
-    // Use Bun's Glob API to recursively get all files
-    const glob = new Glob("**/*");
-    const files = glob.scanSync({ cwd: dir });
+    // Use Bun shell with du command for fast directory size calculation
+    // -sk: summarize (-s) and output in kilobytes (-k)
+    // Note: macOS du doesn't support -b flag, so we use -k and convert
+    const result = await Bun.$`du -sk ${dir}`.text();
     
-    for (const file of files) {
-      const fullPath = join(dir, file);
-      try {
-        // Use Bun.file() to get file size efficiently
-        const bunFile = Bun.file(fullPath);
-        const exists = await bunFile.exists();
-        if (exists) {
-          total += bunFile.size;
-        }
-      } catch {
-        // Skip files we can't access
-        continue;
-      }
-    }
+    // Parse the output: "12345\t/path/to/dir"
+    const sizeStr = result.split('\t')[0];
+    if (!sizeStr) return 0;
+    
+    const sizeInKB = parseInt(sizeStr.trim(), 10) || 0;
+    
+    // Convert kilobytes to bytes
+    return sizeInKB * 1024;
   } catch {
     return 0;
   }
-
-  return total;
 }
 
 /**
