@@ -241,10 +241,20 @@ async function scanNodeModules(dir: string, options: Options, accumulator: Accum
 
             try {
               if (options.verbose) {
-                await Bun.write(Bun.stdout, colorize('Deleting... ', 'red'));
+                process.stdout.write(colorize('Deleting... ', 'red'));
               }
               // Use Bun's shell command for fast, efficient deletion
-              await Bun.$`rm -rf ${fullPath}`.quiet();
+              const proc = Bun.spawn(['rm', '-rf', fullPath], {
+                stdout: 'ignore',
+                stderr: 'pipe'
+              });
+              await proc.exited;
+              
+              if (proc.exitCode !== 0) {
+                const stderr = await new Response(proc.stderr).text();
+                throw new Error(stderr || `Failed with exit code ${proc.exitCode}`);
+              }
+              
               if (options.verbose) {
                 console.log(colorize('✓', 'green'));
               }
@@ -252,6 +262,9 @@ async function scanNodeModules(dir: string, options: Options, accumulator: Accum
                 `${colorize('Deleted:', 'red')} ${fullPath} ${colorize(`(freed ${formatBytes(sizeBytes)})`, 'green')}`
               );
             } catch (err: any) {
+              if (options.verbose) {
+                console.log(colorize('✗', 'red'));
+              }
               console.error(colorize(`Failed to delete ${fullPath}: ${err.message}`, 'red'));
               accumulator.errors.push({ path: fullPath, error: err.message });
             }
