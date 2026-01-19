@@ -1,6 +1,6 @@
 {
   "name": "dnms",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "bin": {
     "dnms": "dist/main.js"
   },
@@ -10,7 +10,8 @@
     "publish:npm": "bun run build && npm publish"
   },
   "files": [
-    "dist"
+    "dist/*.js",
+    "!dist/*.map"
   ],
   "devDependencies": {
     "@types/bun": "latest"
